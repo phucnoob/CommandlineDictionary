@@ -67,4 +67,11 @@ public class Word {
         return  this.target + ": "
                 + this.explain;
     }
+    
+    public boolean hasSameTarget(Word other) {
+        if (other == null) {
+            return false;
+        }
+        return this.target.equals(other.getTarget());
+    }
 }

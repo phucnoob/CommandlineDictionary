@@ -1,6 +1,7 @@
 package uet.ppvan;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -60,6 +61,17 @@ public class DictionaryManagement {
             ioException.printStackTrace();
         }
         return addedWords;
+    }
+    
+    public List<Word> dictionaryLookup(String target) {
+        List<Word> matchedDefinitions = new ArrayList<>();
+        
+        dictionary.forEach((word) -> {
+            if (word.getTarget().equals(target)) {
+                matchedDefinitions.add(word);
+            }
+        });
+        return matchedDefinitions;
     }
     
     public int showAllWords() {
