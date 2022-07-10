@@ -7,7 +7,8 @@ public class DictionaryCommandline {
     public static void main(String[] args) {
         DictionaryCommandline self = new DictionaryCommandline();
         
-        self.dictionaryBasic();
+//        self.dictionaryBasic();
+        self.dictionaryAdvanced();
     }
     
     public DictionaryCommandline() {
@@ -19,4 +20,9 @@ public class DictionaryCommandline {
          manager.showAllWords();
     }
     
+    public void dictionaryAdvanced() {
+        manager.insertFromFile();
+        manager.dictionaryLookup("book").forEach(System.out::println);
+        manager.showAllWords();
+    }
 }
