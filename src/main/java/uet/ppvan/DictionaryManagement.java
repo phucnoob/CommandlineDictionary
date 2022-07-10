@@ -1,5 +1,8 @@
 package uet.ppvan;
 
+import java.io.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class DictionaryManagement {
@@ -30,8 +33,36 @@ public class DictionaryManagement {
         return numOfWords;
     }
     
-    public int showAllWords() {
+    public int insertFromFile() {
+        return insertFromFile(new File("dictionaries.txt"));
+    }
     
+    public int insertFromFile(File src) {
+        
+        int addedWords = 0;
+        try(FileReader input = new FileReader(src);
+            LineNumberReader buffer = new LineNumberReader(input)) {
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                String[] parsedToken = line.split("\t");
+                if (parsedToken.length != 2) {
+                    System.err.println("Invalid line at: " + buffer.getLineNumber());
+                    continue;
+                }
+                dictionary.add(Word.of(parsedToken[0], parsedToken[1]));
+                addedWords++;
+            }
+            
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex.getMessage());
+        } catch (IOException ioException) {
+            System.err.println("Unknown IO exception...\n" + ioException.getMessage());
+            ioException.printStackTrace();
+        }
+        return addedWords;
+    }
+    
+    public int showAllWords() {
         System.out.println("Word list: ");
         dictionary.forEach(System.out::println);
         return dictionary.length();
