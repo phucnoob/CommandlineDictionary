@@ -1,10 +1,11 @@
 package uet.ppvan;
 
 import java.io.BufferedReader;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class InputHelper {
-    private Scanner scanner;
+    private final Scanner scanner;
     private static InputHelper helper;
     
     static {
@@ -22,8 +23,7 @@ public class InputHelper {
         try {
             value = Integer.parseInt(userInput);
         } catch (NumberFormatException ex) {
-            System.err.println("Please enter valid number!!");
-            value = getInt();
+            System.err.printf("'%s' is not valid integer!!\n", userInput);
         }
         
         return value;
