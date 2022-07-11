@@ -19,9 +19,14 @@ public class Word {
             return null;
         }
         
-        return new Word(target, explain);
+        return new Word(target, explain).validate();
     }
     
+    private Word validate() {
+        this.target = this.target.trim();
+        this.explain = this.target.trim();
+        return this;
+    }
     
     static private boolean isValidString(String str) {
         return str != null && !str.isEmpty() && !str.isBlank();
@@ -35,7 +40,7 @@ public class Word {
         if (!isValidString(target)) {
             return;
         }
-        this.target = target;
+        this.target = target.trim();
     }
     
     public String getExplain() {
@@ -48,7 +53,7 @@ public class Word {
             return;
         }
         
-        this.explain = explain;
+        this.explain = explain.trim();
     }
     
     @Override
