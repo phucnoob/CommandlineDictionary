@@ -14,23 +14,19 @@ public class DictionaryManagement {
     }
     
     public int insertFromCommandline() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter number of words to import: ");
         System.out.print("Words = ");
-        int numOfWords = scanner.nextInt();
-        // Remove the '\n' cause by nextInt
-        scanner.nextLine();
+        int numOfWords = InputHelper.getInt();
         
         for (int i = 0; i < numOfWords; i++) {
             System.out.println("Word target: ");
-            String target = scanner.nextLine();
+            String target = InputHelper.getString();
             System.out.println("Word explain: ");
-            String explain = scanner.nextLine();
+            String explain = InputHelper.getString();
             
             dictionary.add(Word.of(target, explain));
         }
         
-        scanner.close();
         return numOfWords;
     }
     

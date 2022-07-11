@@ -2,18 +2,20 @@ package uet.ppvan;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class Dictionary {
-    private ArrayList<Word> vocabulary;
+    private List<Word> vocabulary;
     
     public Dictionary() {
         vocabulary = new ArrayList<>();
     }
     
-    public Dictionary(ArrayList<Word> wordList) {
+    public Dictionary(List<Word> wordList) {
         vocabulary = Objects.requireNonNullElseGet(wordList, ArrayList::new);
     }
     
@@ -25,8 +27,11 @@ public class Dictionary {
         return vocabulary.add(word);
     }
     
-    public boolean add(Collection<Word> wordList) {
-        return vocabulary.addAll(wordList);
+    public boolean add(List<Word> wordList) {
+        return vocabulary.addAll(
+                wordList.stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()));
     }
     
     public boolean remove(Word word) {

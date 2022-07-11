@@ -7,8 +7,8 @@ public class DictionaryCommandline {
     public static void main(String[] args) {
         DictionaryCommandline self = new DictionaryCommandline();
         
-//        self.dictionaryBasic();
-        self.dictionaryAdvanced();
+        self.dictionaryBasic();
+//        self.dictionaryAdvanced();
     }
     
     public DictionaryCommandline() {

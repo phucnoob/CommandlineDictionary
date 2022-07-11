@@ -24,7 +24,7 @@ public class Word {
     
     private Word validate() {
         this.target = this.target.trim();
-        this.explain = this.target.trim();
+        this.explain = this.explain.trim();
         return this;
     }
     
