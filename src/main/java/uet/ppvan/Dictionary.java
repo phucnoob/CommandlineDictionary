@@ -1,11 +1,9 @@
 package uet.ppvan;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class Dictionary {
@@ -34,20 +32,39 @@ public class Dictionary {
                         .collect(Collectors.toList()));
     }
     
+    public List<Word> allWords() {
+        return vocabulary;
+    }
+    
     public boolean remove(Word word) {
         return vocabulary.remove(word);
     }
     
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        vocabulary.forEach((word) -> builder.append(word.toString()));
-        
-        return builder.toString();
+    public boolean removeTarget(String target) {
+        return vocabulary
+                .removeIf((Word word) -> word.getTarget().equals(target));
+    }
+    
+    public boolean update() {
+        return false;
     }
     
     public void forEach(Consumer<Word> consumer) {
         vocabulary.forEach(consumer);
+    }
+    
+    public List<Word> prefixSearch(String target) {
+        return vocabulary
+                .stream()
+                .filter((word -> word.getTarget().startsWith(target)))
+                .collect(Collectors.toList());
+    }
+    
+    public List<Word> search(String target) {
+        return vocabulary
+                .stream()
+                .filter((word -> word.getTarget().equals(target)))
+                .collect(Collectors.toList());
     }
     
     public int length() {

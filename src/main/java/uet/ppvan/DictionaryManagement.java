@@ -1,10 +1,8 @@
 package uet.ppvan;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Scanner;
 
 public class DictionaryManagement {
     private Dictionary dictionary;
@@ -60,20 +58,55 @@ public class DictionaryManagement {
     }
     
     public List<Word> dictionaryLookup(String target) {
-        List<Word> matchedDefinitions = new ArrayList<>();
+        return dictionary.search(target);
+    }
+    
+    public List<Word> getAllWords() {
+        return dictionary.allWords();
+    }
+    
+    public boolean addFromCommandline() {
+        System.out.println("Add new word.");
+        System.out.print("Target: ");
+        String target = InputHelper.getString();
+        System.out.print("Explain: ");
+        String explain = InputHelper.getString();
         
-        dictionary.forEach((word) -> {
-            if (word.getTarget().equals(target)) {
-                matchedDefinitions.add(word);
-            }
-        });
-        return matchedDefinitions;
+        if (target.isEmpty() || explain.isEmpty()) {
+            System.err.println("Add new word failed.");
+            System.err.println("Retry..");
+            return false;
+        } else {
+            return dictionary.add(Word.of(target, explain));
+        }
     }
     
-    public int showAllWords() {
-        System.out.println("Word list: ");
-        dictionary.forEach(System.out::println);
-        return dictionary.length();
+    public boolean deleteFromCommandline() {
+        System.out.println("Delete a word.");
+        System.out.println("This will remove all words has target(all definitions).");
+        System.out.println("Word target: ");
+        
+        String target = InputHelper.getString();
+        return dictionary.removeTarget(target);
     }
     
+    public List<Word> search(String prefix) {
+        return dictionary.prefixSearch(prefix);
+    }
+    
+    public void exportToFile(File dest) {
+        List<Word> words = dictionary.allWords();
+        StringBuilder builder = new StringBuilder();
+        words.forEach((word ->
+                builder.append(word.getTarget())
+                        .append('\t')
+                        .append(word.getExplain())
+                        .append('\n')));
+        
+        try (FileOutputStream out = new FileOutputStream(dest)) {
+            out.write(builder.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

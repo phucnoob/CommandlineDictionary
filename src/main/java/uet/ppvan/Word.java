@@ -22,6 +22,13 @@ public class Word {
         return new Word(target, explain).validate();
     }
     
+    /**
+     * This method is for testing only.
+     */
+    public static Word fromTarget(String target) {
+        return new Word(target, "testing");
+    }
+    
     private Word validate() {
         this.target = this.target.trim();
         this.explain = this.explain.trim();
