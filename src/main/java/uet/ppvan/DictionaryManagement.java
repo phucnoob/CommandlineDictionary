@@ -65,9 +65,18 @@ public class DictionaryManagement {
         return addedWords;
     }
     
-    public List<Word> dictionaryLookup() {
-        String target = "";
-        return dictionary.search(target);
+    public void dictionaryLookup() {
+        
+        System.out.print("Enter word: ");
+        String target = InputHelper.getString();
+        List<Word> matches = dictionary.search(target);
+    
+        System.out.println("Match words: ");
+        System.out.printf("%s.\t%-10s\t%-10s\n", "No", "English", "Vietnamese");
+        for (int i = 0; i < matches.size(); i++) {
+            Word word = matches.get(i);
+            System.out.printf("%d.\t%-10s\t%-10s\n",i + 1 , word.getTarget(), word.getExplain());
+        }
     }
     
     
@@ -108,8 +117,8 @@ public class DictionaryManagement {
     
     public void exportToFile() {
     
-        System.out.print("Path: ");
-        String path = InputHelper.getString();
+        System.out.print("Path(default=dictionaries.txt): ");
+        String path = InputHelper.getStringOrDefault("dictionaries.txt");
         File dest = new File(path);
         
         List<Word> words = dictionary.allWords();
@@ -122,6 +131,7 @@ public class DictionaryManagement {
         
         try (FileOutputStream out = new FileOutputStream(dest)) {
             out.write(builder.toString().getBytes(StandardCharsets.UTF_8));
+            System.out.printf("Export to %s successfull.\n", path);
         } catch (IOException e) {
             e.printStackTrace();
         }
