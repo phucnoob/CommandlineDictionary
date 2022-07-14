@@ -36,4 +36,8 @@ public class InputHelper {
             return "";
         }
     }
+    
+    public static void idle() {
+        helper.scanner.nextLine();
+    }
 }

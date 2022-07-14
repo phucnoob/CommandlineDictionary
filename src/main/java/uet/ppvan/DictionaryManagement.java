@@ -57,15 +57,18 @@ public class DictionaryManagement {
         return addedWords;
     }
     
-    public List<Word> dictionaryLookup(String target) {
+    public List<Word> dictionaryLookup() {
+        String target = "";
         return dictionary.search(target);
     }
+    
+    
     
     public List<Word> getAllWords() {
         return dictionary.allWords();
     }
     
-    public boolean addFromCommandline() {
+    public boolean addNewWord() {
         System.out.println("Add new word.");
         System.out.print("Target: ");
         String target = InputHelper.getString();
@@ -81,20 +84,26 @@ public class DictionaryManagement {
         }
     }
     
-    public boolean deleteFromCommandline() {
+    public boolean deleteWord() {
         System.out.println("Delete a word.");
         System.out.println("This will remove all words has target(all definitions).");
-        System.out.println("Word target: ");
+        System.out.print("Word target: ");
         
         String target = InputHelper.getString();
         return dictionary.removeTarget(target);
     }
     
-    public List<Word> search(String prefix) {
+    public List<Word> search() {
+        String prefix = "";
         return dictionary.prefixSearch(prefix);
     }
     
-    public void exportToFile(File dest) {
+    public void exportToFile() {
+    
+        System.out.print("Path: ");
+        String path = InputHelper.getString();
+        File dest = new File(path);
+        
         List<Word> words = dictionary.allWords();
         StringBuilder builder = new StringBuilder();
         words.forEach((word ->
@@ -108,5 +117,8 @@ public class DictionaryManagement {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void updateWord() {
     }
 }
