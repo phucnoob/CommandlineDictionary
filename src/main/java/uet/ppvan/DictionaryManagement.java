@@ -28,11 +28,19 @@ public class DictionaryManagement {
         return numOfWords;
     }
     
-    public int insertFromFile() {
-        return insertFromFile(new File("dictionaries.txt"));
+    public void insertFromFile() {
+        System.out.println("Enter path (default = dictionaries.txt): ");
+        String path = InputHelper.getStringOrDefault("dictionaries.txt");
+        File file = new File(path);
+        if (!file.exists()) {
+            System.err.println("File not exist. Abort operation...");
+            return;
+        }
+        int records = handleInsertFromFile(file);
+        System.out.printf("Import %s: %d success\n", path, records);
     }
     
-    public int insertFromFile(File src) {
+    public int handleInsertFromFile(File src) {
         
         int addedWords = 0;
         try(FileReader input = new FileReader(src);

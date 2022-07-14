@@ -37,6 +37,11 @@ public class InputHelper {
         }
     }
     
+    public static String getStringOrDefault(String defaultStr) {
+        String str = getString();
+        return str.isEmpty() ? defaultStr : str;
+    }
+    
     public static void idle() {
         helper.scanner.nextLine();
     }
