@@ -1,5 +1,7 @@
 package uet.ppvan;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -12,24 +14,12 @@ public class DictionaryManagement {
         dictionary = new Dictionary();
     }
     
-    public int insertFromCommandline() {
-        System.out.println("Enter number of words to import: ");
-        System.out.print("Words = ");
-        int numOfWords = InputHelper.getInt();
-        
-        for (int i = 0; i < numOfWords; i++) {
-            String target = InputHelper.getString("Word target: ");
-            String explain = InputHelper.getString("Word explain: ");
-            
-            dictionary.add(Word.of(target, explain));
-        }
-        
-        return numOfWords;
+    public int insertFromCommandline(List<Word> words) {
+        words.forEach(word -> dictionary.add(word));
+        return words.size();
     }
     
-    public void insertFromFile() {
-        System.out.println("Enter path (default = dictionaries.txt): ");
-        String path = InputHelper.getStringOrDefault("dictionaries.txt");
+    public void insertFromFile(String path) {
         File file = new File(path);
         if (!file.exists()) {
             System.err.println("File not exist. Abort operation...");
@@ -64,17 +54,8 @@ public class DictionaryManagement {
         return addedWords;
     }
     
-    public void dictionaryLookup() {
-        
-        String target = InputHelper.getString("Enter word: ");
-        Optional<Word> matches = dictionary.search(target);
-        if (matches.isPresent()) {
-            Word word = matches.get();
-            System.out.println("Found!");
-            System.out.printf("%s: %s\n", word.getTarget(), word.getExplain());
-        } else {
-            System.out.println("Not found any. Try again");
-        }
+    public Optional<Word> dictionaryLookup(String target) {
+        return dictionary.search(target);
     }
     
     
@@ -83,11 +64,7 @@ public class DictionaryManagement {
         return dictionary.allWords();
     }
     
-    public boolean addNewWord() {
-        System.out.println("Add new word.");
-        String target = InputHelper.getString("Target: ");
-        String explain = InputHelper.getString("Explain: ");
-        
+    public boolean addNewWord(String target, String explain) {
         if (target.isEmpty() || explain.isEmpty()) {
             System.err.println("Add new word failed.");
             System.err.println("Retry..");
@@ -108,11 +85,8 @@ public class DictionaryManagement {
         return dictionary.prefixSearch(prefix);
     }
     
-    public void exportToFile() {
-    
-        System.out.print("Path(default=dictionaries.txt): ");
-        String path = InputHelper.getStringOrDefault("dictionaries.txt");
-        File dest = new File(path);
+    public boolean exportToFile(String path) {
+        File dest = createFileIfNotExist(path);
         
         List<Word> words = dictionary.allWords();
         StringBuilder builder = new StringBuilder();
@@ -122,11 +96,27 @@ public class DictionaryManagement {
                         .append(word.getExplain())
                         .append('\n')));
         
-        try (FileOutputStream out = new FileOutputStream(dest)) {
-            out.write(builder.toString().getBytes(StandardCharsets.UTF_8));
-            System.out.printf("Export to %s successfull.\n", path);
+        return handleWriteToFile(dest, builder.toString()
+                .getBytes(StandardCharsets.UTF_8));
+    }
+    
+    public File createFileIfNotExist(String path) {
+        File file = new File(path);
+        try {
+            file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return file;
+    }
+    
+    public boolean handleWriteToFile(File dest, byte[] data) {
+        try (FileOutputStream out = new FileOutputStream(dest)) {
+            out.write(data);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
     }
     

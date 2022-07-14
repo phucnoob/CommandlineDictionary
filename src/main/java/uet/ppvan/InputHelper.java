@@ -1,7 +1,5 @@
 package uet.ppvan;
 
-import java.io.BufferedReader;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class InputHelper {

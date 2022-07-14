@@ -2,7 +2,9 @@ package uet.ppvan;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DictionaryCommandline {
     
@@ -19,7 +21,7 @@ public class DictionaryCommandline {
     }
     
     public void waitUser() {
-        System.out.println("---Press [enter] to continue----");
+        System.out.print("---Press [enter] to continue----");
         InputHelper.idle();
     }
     
@@ -28,12 +30,10 @@ public class DictionaryCommandline {
     
         switch (command) {
             case EXIT:
-                this.isRunning = false;
-                System.out.println("Bye!");
-                System.exit(0);
+                exit();
                 break;
             case ADD:
-                manager.addNewWord();
+                addNewWord();
                 break;
             case DELETE:
                 deleteWord();
@@ -42,16 +42,16 @@ public class DictionaryCommandline {
                 updateWord();
                 break;
             case INSERT_FROM_COMMANDLINE:
-                manager.insertFromCommandline();
+                insertFromCommandline();
                 break;
             case INSERT_FROM_FILE:
-                manager.insertFromFile();
+                insertFromFile();
                 break;
             case EXPORT_TO_FILE:
-                manager.exportToFile();
+                exportToFile();
                 break;
             case SEARCH:
-                manager.dictionaryLookup();
+                dictionaryLookup();
                 break;
             case SEARCH_INTERACTIVE:
                 interactiveSearch();
@@ -60,6 +60,69 @@ public class DictionaryCommandline {
                 showAllWords();
                 break;
         }
+    }
+    
+    private void exit() {
+        this.isRunning = false;
+        System.out.println("Bye!");
+        System.exit(0);
+    }
+    
+    private void insertFromCommandline() {
+        System.out.println("Enter number of words to import: ");
+        System.out.print("Words = ");
+        
+        List<Word> words = new ArrayList<>();
+        int numOfWords = InputHelper.getInt();
+    
+        for (int i = 0; i < numOfWords; i++) {
+            String target = InputHelper.getString("Word target: ");
+            String explain = InputHelper.getString("Word explain: ");
+        
+            words.add(Word.of(target, explain));
+        }
+    
+        manager.insertFromCommandline(words);
+    }
+    
+    private void dictionaryLookup() {
+        String target = InputHelper.getString("Search word: ");
+        Optional<Word> matches = manager.dictionaryLookup(target);
+        
+        if (matches.isPresent()) {
+            Word word = matches.get();
+            System.out.println("Found!");
+            showWords(List.of(word));
+        } else {
+            System.out.println("Not found any. Try again");
+        }
+    }
+    
+    private void exportToFile() {
+        System.out.print("Enter export location(default=dictionaries.txt): ");
+        String path = InputHelper.getStringOrDefault("dictionaries.txt");
+        boolean success = manager.exportToFile(path);
+        
+        if (success) {
+            System.out.printf("Export data to %s successfully.\n", path);
+        } else {
+            System.out.println("Export failed.");
+        }
+    }
+    
+    private void insertFromFile() {
+        System.out.println("Enter path (default = dictionaries.txt): ");
+        String path = InputHelper.getStringOrDefault("dictionaries.txt");
+        
+        manager.insertFromFile(path);
+    }
+    
+    private void addNewWord() {
+        System.out.println("Add new word.");
+        String target = InputHelper.getString("Target: ");
+        String explain = InputHelper.getString("Explain: ");
+        
+        manager.addNewWord(target, explain);
     }
     
     private void interactiveSearch() {
@@ -109,7 +172,6 @@ public class DictionaryCommandline {
     
     public void updateWord() {
         showAllWords();
-    
         String target = InputHelper.getString("Enter word to update: ");
         String newExplain = InputHelper.getString("New explain: ");
         manager.updateWord(target, newExplain);
