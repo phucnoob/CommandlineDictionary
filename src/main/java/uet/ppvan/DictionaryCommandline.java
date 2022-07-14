@@ -96,10 +96,11 @@ public class DictionaryCommandline {
     
     private void showAllWords() {
         System.out.println("Word list.");
+        System.out.printf("%s.\t%-10s\t%-10s\n", "No", "English", "Vietnamese");
         List<Word> words = manager.getAllWords();
         for (int i = 0; i < words.size(); i++) {
             Word word = words.get(i);
-            System.out.printf("%d.\t%-10s\t%-10s\n",i , word.getTarget(), word.getExplain());
+            System.out.printf("%d.\t%-10s\t%-10s\n",i + 1 , word.getTarget(), word.getExplain());
         }
     }
 }
