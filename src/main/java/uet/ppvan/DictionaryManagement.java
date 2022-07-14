@@ -3,6 +3,7 @@ package uet.ppvan;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 public class DictionaryManagement {
     private Dictionary dictionary;
@@ -17,10 +18,8 @@ public class DictionaryManagement {
         int numOfWords = InputHelper.getInt();
         
         for (int i = 0; i < numOfWords; i++) {
-            System.out.println("Word target: ");
-            String target = InputHelper.getString();
-            System.out.println("Word explain: ");
-            String explain = InputHelper.getString();
+            String target = InputHelper.getString("Word target: ");
+            String explain = InputHelper.getString("Word explain: ");
             
             dictionary.add(Word.of(target, explain));
         }
@@ -67,15 +66,14 @@ public class DictionaryManagement {
     
     public void dictionaryLookup() {
         
-        System.out.print("Enter word: ");
-        String target = InputHelper.getString();
-        List<Word> matches = dictionary.search(target);
-    
-        System.out.println("Match words: ");
-        System.out.printf("%s.\t%-10s\t%-10s\n", "No", "English", "Vietnamese");
-        for (int i = 0; i < matches.size(); i++) {
-            Word word = matches.get(i);
-            System.out.printf("%d.\t%-10s\t%-10s\n",i + 1 , word.getTarget(), word.getExplain());
+        String target = InputHelper.getString("Enter word: ");
+        Optional<Word> matches = dictionary.search(target);
+        if (matches.isPresent()) {
+            Word word = matches.get();
+            System.out.println("Found!");
+            System.out.printf("%s: %s\n", word.getTarget(), word.getExplain());
+        } else {
+            System.out.println("Not found any. Try again");
         }
     }
     
@@ -87,10 +85,8 @@ public class DictionaryManagement {
     
     public boolean addNewWord() {
         System.out.println("Add new word.");
-        System.out.print("Target: ");
-        String target = InputHelper.getString();
-        System.out.print("Explain: ");
-        String explain = InputHelper.getString();
+        String target = InputHelper.getString("Target: ");
+        String explain = InputHelper.getString("Explain: ");
         
         if (target.isEmpty() || explain.isEmpty()) {
             System.err.println("Add new word failed.");
@@ -104,14 +100,11 @@ public class DictionaryManagement {
     public boolean deleteWord() {
         System.out.println("Delete a word.");
         System.out.println("This will remove all words has target(all definitions).");
-        System.out.print("Word target: ");
-        
-        String target = InputHelper.getString();
+        String target = InputHelper.getString("Word target: ");
         return dictionary.removeTarget(target);
     }
     
-    public List<Word> search() {
-        String prefix = "";
+    public List<Word> search(String prefix) {
         return dictionary.prefixSearch(prefix);
     }
     
@@ -137,6 +130,9 @@ public class DictionaryManagement {
         }
     }
     
-    public void updateWord() {
+    public void updateWord(String target, String explain) {
+        dictionary
+                .search(target)
+                .ifPresent((oldWord) -> dictionary.update(oldWord, explain));
     }
 }

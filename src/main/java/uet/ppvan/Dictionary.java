@@ -3,6 +3,7 @@ package uet.ppvan;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -45,8 +46,17 @@ public class Dictionary {
                 .removeIf((Word word) -> word.getTarget().equals(target));
     }
     
-    public boolean update() {
-        return false;
+    public boolean update(Word oldWord, String newExplain) {
+        Optional<Word> target = vocabulary.stream()
+                .filter(word -> word.equals(oldWord))
+                .findFirst();
+        
+        if (target.isPresent()) {
+            target.get().setExplain(newExplain);
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public void forEach(Consumer<Word> consumer) {
@@ -60,11 +70,11 @@ public class Dictionary {
                 .collect(Collectors.toList());
     }
     
-    public List<Word> search(String target) {
+    public Optional<Word> search(String target) {
         return vocabulary
                 .stream()
                 .filter((word -> word.getTarget().equals(target)))
-                .collect(Collectors.toList());
+                .findFirst();
     }
     
     public int length() {

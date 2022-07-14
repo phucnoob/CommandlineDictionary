@@ -30,15 +30,16 @@ public class DictionaryCommandline {
             case EXIT:
                 this.isRunning = false;
                 System.out.println("Bye!");
+                System.exit(0);
                 break;
             case ADD:
                 manager.addNewWord();
                 break;
             case DELETE:
-                manager.deleteWord();
+                deleteWord();
                 break;
             case UPDATE:
-                manager.updateWord();
+                updateWord();
                 break;
             case INSERT_FROM_COMMANDLINE:
                 manager.insertFromCommandline();
@@ -53,12 +54,17 @@ public class DictionaryCommandline {
                 manager.dictionaryLookup();
                 break;
             case SEARCH_INTERACTIVE:
-                manager.search();
+                interactiveSearch();
                 break;
             case SHOW_ALL:
                 showAllWords();
                 break;
         }
+    }
+    
+    private void interactiveSearch() {
+        String prefix = InputHelper.getString("Enter prefix: ");
+        showWords(manager.search(prefix));
     }
     
     public void showOptions() {
@@ -89,17 +95,45 @@ public class DictionaryCommandline {
         }
     }
     
+    public void deleteWord() {
+        showAllWords();
+        String target = InputHelper.getString("Enter word to delete: ");
+        boolean success = manager.deleteWord();
+        
+        if (success) {
+            System.out.printf("Delete: %s successfully\n", target);
+        } else {
+            System.err.printf("Delete: %s failed\n", target);
+        }
+    }
+    
+    public void updateWord() {
+        showAllWords();
+    
+        String target = InputHelper.getString("Enter word to update: ");
+        String newExplain = InputHelper.getString("New explain: ");
+        manager.updateWord(target, newExplain);
+        System.out.println("Update word successfully.");
+    }
+    
     public DictionaryCommandline() {
         manager = new DictionaryManagement();
     }
     
     
     private void showAllWords() {
-        System.out.println("Word list.");
+        showWords(manager.getAllWords());
+    }
+    
+    private void showWords(List<Word> wordList) {
+        
+        if (wordList == null) {
+            return;
+        }
+        
         System.out.printf("%s.\t%-10s\t%-10s\n", "No", "English", "Vietnamese");
-        List<Word> words = manager.getAllWords();
-        for (int i = 0; i < words.size(); i++) {
-            Word word = words.get(i);
+        for (int i = 0; i < wordList.size(); i++) {
+            Word word = wordList.get(i);
             System.out.printf("%d.\t%-10s\t%-10s\n",i + 1 , word.getTarget(), word.getExplain());
         }
     }

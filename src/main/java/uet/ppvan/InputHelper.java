@@ -37,6 +37,11 @@ public class InputHelper {
         }
     }
     
+    public static String getString(String prompt) {
+        System.out.print(prompt);
+        return getString();
+    }
+    
     public static String getStringOrDefault(String defaultStr) {
         String str = getString();
         return str.isEmpty() ? defaultStr : str;

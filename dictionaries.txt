@@ -1,7 +1,1 @@
 book	sách
-book	đặt chỗ
-hello,world	xin chào thế giới
-water	nước
-fire	lửa
-abc	cba
-bla	bla
