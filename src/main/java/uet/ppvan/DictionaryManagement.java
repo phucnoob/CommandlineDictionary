@@ -1,6 +1,8 @@
 package uet.ppvan;
 
-import org.jetbrains.annotations.NotNull;
+import uet.ppvan.data.Dictionary;
+import uet.ppvan.data.FileDictionary;
+import uet.ppvan.data.Word;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -11,7 +13,8 @@ public class DictionaryManagement {
     private Dictionary dictionary;
     
     public DictionaryManagement() {
-        dictionary = new Dictionary();
+        dictionary = new FileDictionary();
+        insertFromFile("dictionaries.txt");
     }
     
     public int insertFromCommandline(List<Word> words) {

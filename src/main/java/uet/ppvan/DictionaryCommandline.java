@@ -1,6 +1,7 @@
 package uet.ppvan;
 
-import java.io.File;
+import uet.ppvan.data.Word;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

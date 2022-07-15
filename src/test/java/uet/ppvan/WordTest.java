@@ -1,6 +1,7 @@
 package uet.ppvan;
 
 import org.junit.jupiter.api.Test;
+import uet.ppvan.data.Word;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,8 @@
 package uet.ppvan;
 
 import org.junit.jupiter.api.Test;
+import uet.ppvan.data.FileDictionary;
+import uet.ppvan.data.Word;
 
 import java.util.ArrayList;
 
@@ -11,7 +13,7 @@ class DictionaryTest {
     @Test
     void ShouldNotAddNullWord() {
         Word word = null;
-        Dictionary dictionary = new Dictionary();
+        FileDictionary dictionary = new FileDictionary();
         dictionary.add(word);
         
         assertEquals(0, dictionary.length());
@@ -28,7 +30,7 @@ class DictionaryTest {
         words.add(Word.of("dummy", "data4"));
         words.add(Word.of("dummy", "data5"));
         
-        Dictionary dictionary = new Dictionary();
+        FileDictionary dictionary = new FileDictionary();
         dictionary.add(words);
         
         assertEquals(5, dictionary.length());
@@ -36,7 +38,7 @@ class DictionaryTest {
     
     @Test
     void shouldRemoveOneWord() {
-        Dictionary dictionary = new Dictionary();
+        FileDictionary dictionary = new FileDictionary();
         dictionary.add(Word.of("hello", "bye"));
         dictionary.add(Word.of("hello", "bye1"));
         

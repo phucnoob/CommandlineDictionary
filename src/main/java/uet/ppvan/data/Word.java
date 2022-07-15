@@ -1,4 +1,4 @@
-package uet.ppvan;
+package uet.ppvan.data;
 
 public class Word {
     private String target;
