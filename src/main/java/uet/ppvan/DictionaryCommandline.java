@@ -21,7 +21,7 @@ public class DictionaryCommandline {
     }
     
     public void waitUser() {
-        System.out.print("---Press [enter] to continue----");
+        System.out.println("---Press [enter] to continue----");
         InputHelper.idle();
     }
     
@@ -76,8 +76,15 @@ public class DictionaryCommandline {
         int numOfWords = InputHelper.getInt();
     
         for (int i = 0; i < numOfWords; i++) {
+            System.out.printf("Word %d:\n", i + 1);
             String target = InputHelper.getString("Word target: ");
             String explain = InputHelper.getString("Word explain: ");
+            
+            if (target.isEmpty() || explain.isEmpty()) {
+                i--;
+                System.err.println("Empty entry is invalid! Enter again.");
+                continue;
+            }
         
             words.add(Word.of(target, explain));
         }
@@ -161,7 +168,7 @@ public class DictionaryCommandline {
     public void deleteWord() {
         showAllWords();
         String target = InputHelper.getString("Enter word to delete: ");
-        boolean success = manager.deleteWord();
+        boolean success = manager.deleteWord(target);
         
         if (success) {
             System.out.printf("Delete: %s successfully\n", target);

@@ -74,10 +74,8 @@ public class DictionaryManagement {
         }
     }
     
-    public boolean deleteWord() {
-        System.out.println("Delete a word.");
+    public boolean deleteWord(String target) {
         System.out.println("This will remove all words has target(all definitions).");
-        String target = InputHelper.getString("Word target: ");
         return dictionary.removeTarget(target);
     }
     

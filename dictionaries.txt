@@ -1,6 +1,3 @@
-hello	chao xin
-book	sach
-hi	chao
-breakfast	bua sang
-tutorial	chuoi video
 book	sách
+target	mục
+tiêu	hạt tiêu
