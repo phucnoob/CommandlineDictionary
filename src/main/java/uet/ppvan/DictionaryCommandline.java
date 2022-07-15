@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class DictionaryCommandline {
     
-    private DictionaryManagement manager;
+    private final DictionaryManagement manager;
     private boolean isRunning = true;
     
     public static void main(String[] args) {
@@ -201,10 +201,11 @@ public class DictionaryCommandline {
             return;
         }
         
+        String wordFormat = "%d.\t%-10s\t%-10s\n";
         System.out.printf("%s.\t%-10s\t%-10s\n", "No", "English", "Vietnamese");
         for (int i = 0; i < wordList.size(); i++) {
             Word word = wordList.get(i);
-            System.out.printf("%d.\t%-10s\t%-10s\n",i + 1 , word.getTarget(), word.getExplain());
+            System.out.printf(wordFormat, i + 1 , wordList.get(i).getTarget(), wordList.get(i).getExplain());
         }
     }
 }

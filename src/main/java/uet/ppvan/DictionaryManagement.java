@@ -6,15 +6,18 @@ import uet.ppvan.data.Word;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public class DictionaryManagement {
-    private Dictionary dictionary;
+    private final Dictionary dictionary;
     
     public DictionaryManagement() {
         dictionary = new FileDictionary();
-        insertFromFile("dictionaries.txt");
     }
     
     public int insertFromCommandline(List<Word> words) {
@@ -32,7 +35,10 @@ public class DictionaryManagement {
         System.out.printf("Import %s: %d success\n", path, records);
     }
     
-    public int handleInsertFromFile(File src) {
+    public void insertFromFileNio(String path) {
+        handleInsertFromFileNonBlock(Path.of(path));
+    }
+    private int handleInsertFromFile(File src) {
         
         int addedWords = 0;
         try(FileReader input = new FileReader(src);
@@ -55,6 +61,24 @@ public class DictionaryManagement {
             ioException.printStackTrace();
         }
         return addedWords;
+    }
+    
+    private int handleInsertFromFileNonBlock(Path path) {
+        AtomicInteger count = new AtomicInteger();
+        try (Stream<String> fileLines = Files.lines(path)){
+            fileLines
+                    .map((String line) -> line.split("\t"))
+                    .filter(tokens -> tokens.length == 2)
+                    .map(tokens -> Word.of(tokens[0], tokens[1]))
+                    .forEach(word ->{
+                        count.addAndGet(1);
+                        dictionary.add(word);
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        
+        return count.get();
     }
     
     public Optional<Word> dictionaryLookup(String target) {
