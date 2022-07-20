@@ -1,5 +1,6 @@
-package uet.ppvan;
+package uet.ppvan.commandline;
 
+import uet.ppvan.DictionaryManagement;
 import uet.ppvan.data.Word;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class DictionaryCommandline {
                 continue;
             }
         
-            words.add(Word.of(target, explain));
+            words.add(Word.from(target, explain));
         }
     
         manager.insertFromCommandline(words);

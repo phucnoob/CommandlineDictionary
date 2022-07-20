@@ -21,10 +21,9 @@ public class DictionaryManagement {
     }
     
     public int insertFromCommandline(List<Word> words) {
-        words.forEach(word -> dictionary.add(word));
+        words.forEach(dictionary::add);
         return words.size();
     }
-    
     public void insertFromFile(String path) {
         File file = new File(path);
         if (!file.exists()) {
@@ -50,7 +49,7 @@ public class DictionaryManagement {
                     System.err.println("Invalid line at: " + buffer.getLineNumber());
                     continue;
                 }
-                dictionary.add(Word.of(parsedToken[0], parsedToken[1]));
+                dictionary.add(Word.from(parsedToken[0], parsedToken[1]));
                 addedWords++;
             }
             
@@ -69,7 +68,7 @@ public class DictionaryManagement {
             fileLines
                     .map((String line) -> line.split("\t"))
                     .filter(tokens -> tokens.length == 2)
-                    .map(tokens -> Word.of(tokens[0], tokens[1]))
+                    .map(tokens -> Word.from(tokens[0], tokens[1]))
                     .forEach(word ->{
                         count.addAndGet(1);
                         dictionary.add(word);
@@ -97,7 +96,7 @@ public class DictionaryManagement {
             System.err.println("Retry..");
             return false;
         } else {
-            return dictionary.add(Word.of(target, explain));
+            return dictionary.add(Word.from(target, explain));
         }
     }
     

@@ -9,34 +9,33 @@ public class Word {
         this.explain = explain;
     }
     
-    public static Word of(String target, String explain) {
-        if (!isValidString(target)) {
+    public static Word from(String target, String explain) {
+        if (isInValid(target)) {
             System.err.println("Target should not be null, empty or blank");
             return null;
         }
-        if (!isValidString(explain)) {
+        if (isInValid(explain)) {
             System.err.println("Explain should not be null, empty or blank");
             return null;
         }
-        
         return new Word(target, explain).validate();
     }
-    
-    /**
-     * This method is for testing only.
-     */
-    public static Word fromTarget(String target) {
-        return new Word(target, "testing");
-    }
-    
     private Word validate() {
         this.target = this.target.trim();
         this.explain = this.explain.trim();
         return this;
     }
     
-    static private boolean isValidString(String str) {
-        return str != null && !str.isEmpty() && !str.isBlank();
+    private static boolean isInValid(String str) {
+        if (str == null) {
+            return true;
+        } else if (str.isEmpty()) {
+            return true;
+        } else if (str.isBlank()) {
+            return true;
+        }
+        
+        return false;
     }
     public String getTarget() {
         return target;
@@ -44,7 +43,7 @@ public class Word {
     
     public void setTarget(String target) {
         
-        if (!isValidString(target)) {
+        if (isInValid(target)) {
             return;
         }
         this.target = target.trim();
@@ -56,7 +55,7 @@ public class Word {
     
     public void setExplain(String explain) {
         
-        if (!isValidString(explain)) {
+        if (isInValid(explain)) {
             return;
         }
         
@@ -80,10 +79,4 @@ public class Word {
                 + this.explain;
     }
     
-    public boolean hasSameTarget(Word other) {
-        if (other == null) {
-            return false;
-        }
-        return this.target.equals(other.getTarget());
-    }
 }

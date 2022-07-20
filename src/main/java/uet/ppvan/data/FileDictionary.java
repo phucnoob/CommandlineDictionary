@@ -17,7 +17,6 @@ public class FileDictionary implements Dictionary {
     public FileDictionary(List<Word> wordList) {
         vocabulary = Objects.requireNonNullElseGet(wordList, ArrayList::new);
     }
-    
     @Override
     public boolean add(Word word) {
         if (word == null) {

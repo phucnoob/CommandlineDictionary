@@ -2,11 +2,10 @@ package uet.ppvan;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uet.ppvan.commandline.InputHelper;
 
 import java.io.*;
-import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 

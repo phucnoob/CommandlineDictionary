@@ -22,13 +22,13 @@ class DictionaryTest {
     @Test
     void ShouldIgnoreNullWordInCollection() {
         ArrayList<Word> words = new ArrayList<>();
-        words.add(Word.of("dummy", "data1"));
-        words.add(Word.of("dummy", "data2"));
-        words.add(Word.of("dummy", "data3"));
+        words.add(Word.from("dummy", "data1"));
+        words.add(Word.from("dummy", "data2"));
+        words.add(Word.from("dummy", "data3"));
         words.add(null);
         words.add(null);
-        words.add(Word.of("dummy", "data4"));
-        words.add(Word.of("dummy", "data5"));
+        words.add(Word.from("dummy", "data4"));
+        words.add(Word.from("dummy", "data5"));
         
         FileDictionary dictionary = new FileDictionary();
         dictionary.add(words);
@@ -39,9 +39,9 @@ class DictionaryTest {
     @Test
     void shouldRemoveOneWord() {
         FileDictionary dictionary = new FileDictionary();
-        dictionary.add(Word.of("hello", "bye"));
-        dictionary.add(Word.of("hello", "bye1"));
+        dictionary.add(Word.from("hello", "bye"));
+        dictionary.add(Word.from("hello", "bye1"));
         
-        dictionary.remove(Word.of("hello", "bye1"));
+        dictionary.remove(Word.from("hello", "bye1"));
     }
 }

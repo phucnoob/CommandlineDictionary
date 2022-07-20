@@ -9,31 +9,31 @@ class WordTest {
     
     @Test
     void EmptyTargetShouldReturnNull() {
-        Word word = Word.of("", "testing");
+        Word word = Word.from("", "testing");
         assertNull(word);
     }
     
     @Test
     void EmptyExplainShouldReturnNull() {
-        Word word = Word.of("testing", "");
+        Word word = Word.from("testing", "");
         assertNull(word);
     }
     
     @Test
     void BlankExplainShouldReturnNull() {
-        Word word = Word.of("testing", "          ");
+        Word word = Word.from("testing", "          ");
         assertNull(word);
     }
     
     @Test
     void BlankTargetShouldReturnNull() {
-        Word word = Word.of("testing", "            ");
+        Word word = Word.from("testing", "            ");
         assertNull(word);
     }
     
     @Test
     void setTargetShouldDoNothingOnBlankTarget() {
-        Word word = Word.of("testing", "testing");
+        Word word = Word.from("testing", "testing");
         
         assert word != null;
         word.setTarget("            ");
@@ -44,7 +44,7 @@ class WordTest {
     
     @Test
     void setTargetShouldTrimTheString() {
-        Word word = Word.of("testing trim", "test");
+        Word word = Word.from("testing trim", "test");
         assert word != null;
         word.setTarget("     some target that not very clean        ");
         
@@ -53,7 +53,7 @@ class WordTest {
     
     @Test
     void setExplainShouldTrimTheString() {
-        Word word = Word.of("testing trim", "test");
+        Word word = Word.from("testing trim", "test");
         assert word != null;
         word.setExplain("     some explain that not very clean        ");
         
@@ -62,7 +62,7 @@ class WordTest {
     
     @Test
     void setExplainShouldDoNothingOnBlankExplain() {
-        Word word = Word.of("testing", "testing");
+        Word word = Word.from("testing", "testing");
         
         assert word != null;
         word.setExplain("            ");
@@ -73,10 +73,9 @@ class WordTest {
     
     @Test
     void testEqualsContract() {
-        Word word = Word.of("testing", "testing");
-        Word other = Word.of("testing", "testing");
-        Word otherWord = Word.of("testing", "testing");
-    
+        Word word = Word.from("testing", "testing");
+        Word other = Word.from("testing", "testing");
+        Word otherWord = Word.from("testing", "testing");
         assert word != null;
         assert other != null;
         assert otherWord != null;
