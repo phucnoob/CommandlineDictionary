@@ -1,4 +1,4 @@
-package uet.ppvan.commandline;
+package uet.ppvan.utils;
 
 import java.util.Scanner;
 

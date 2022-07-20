@@ -45,7 +45,7 @@ public class FileDictionary implements Dictionary {
     }
     
     @Override
-    public boolean removeTarget(String target) {
+    public boolean remove(String target) {
         return vocabulary
                 .removeIf((Word word) -> word.getTarget().equals(target));
     }
@@ -78,7 +78,7 @@ public class FileDictionary implements Dictionary {
     }
     
     @Override
-    public Optional<Word> search(String target) {
+    public Optional<Word> get(String target) {
         return vocabulary
                 .stream()
                 .filter((word -> word.getTarget().equals(target)))

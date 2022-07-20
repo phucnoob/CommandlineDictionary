@@ -7,13 +7,16 @@ import java.util.function.Consumer;
 public interface Dictionary {
     boolean add(Word word);
     
-    boolean add(List<Word> wordList);
+    default boolean add(List<Word> wordList) {
+        wordList.forEach(this::add);
+        return true;
+    }
     
     List<Word> allWords();
     
     boolean remove(Word word);
     
-    boolean removeTarget(String target);
+    boolean remove(String target);
     
     boolean update(Word oldWord, String newExplain);
     
@@ -21,7 +24,7 @@ public interface Dictionary {
     
     List<Word> prefixSearch(String target);
     
-    Optional<Word> search(String target);
+    Optional<Word> get(String target);
     
     int length();
 }

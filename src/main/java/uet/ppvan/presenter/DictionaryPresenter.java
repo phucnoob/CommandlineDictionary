@@ -1,8 +1,9 @@
-package uet.ppvan;
+package uet.ppvan.presenter;
 
 import uet.ppvan.data.Dictionary;
 import uet.ppvan.data.FileDictionary;
 import uet.ppvan.data.Word;
+import uet.ppvan.view.View;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -13,13 +14,18 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-public class DictionaryManagement {
+public class DictionaryPresenter implements Presenter {
     private final Dictionary dictionary;
+    private View currentView;
     
-    public DictionaryManagement() {
+    public DictionaryPresenter() {
         dictionary = new FileDictionary();
     }
     
+    @Override
+    public void setView(View view) {
+        currentView = view;
+    }
     public int insertFromCommandline(List<Word> words) {
         words.forEach(dictionary::add);
         return words.size();
@@ -27,11 +33,11 @@ public class DictionaryManagement {
     public void insertFromFile(String path) {
         File file = new File(path);
         if (!file.exists()) {
-            System.err.println("File not exist. Abort operation...");
+            currentView.error("File not exist. Abort operation...");
             return;
         }
         int records = handleInsertFromFile(file);
-        System.out.printf("Import %s: %d success\n", path, records);
+        currentView.info(String.format("Import %s: %d success\n", path, records));
     }
     
     public void insertFromFileNio(String path) {
@@ -46,7 +52,7 @@ public class DictionaryManagement {
             while ((line = buffer.readLine()) != null) {
                 String[] parsedToken = line.split("\t");
                 if (parsedToken.length != 2) {
-                    System.err.println("Invalid line at: " + buffer.getLineNumber());
+                    currentView.error("Invalid line at: " + buffer.getLineNumber());
                     continue;
                 }
                 dictionary.add(Word.from(parsedToken[0], parsedToken[1]));
@@ -54,11 +60,12 @@ public class DictionaryManagement {
             }
             
         } catch (FileNotFoundException ex) {
-            System.err.println(ex.getMessage());
+            currentView.error(String.format("No such file: %s", src.getAbsolutePath()));
         } catch (IOException ioException) {
-            System.err.println("Unknown IO exception...\n" + ioException.getMessage());
+            currentView.error("Unknown IO exception...\n" + ioException.getMessage());
             ioException.printStackTrace();
         }
+        
         return addedWords;
     }
     
@@ -80,36 +87,36 @@ public class DictionaryManagement {
         return count.get();
     }
     
-    public Optional<Word> dictionaryLookup(String target) {
-        return dictionary.search(target);
-    }
-    
-    
-    
+    @Override
     public List<Word> getAllWords() {
         return dictionary.allWords();
     }
     
-    public boolean addNewWord(String target, String explain) {
+    @Override
+    public void addNewWord(String target, String explain) {
         if (target.isEmpty() || explain.isEmpty()) {
-            System.err.println("Add new word failed.");
-            System.err.println("Retry..");
-            return false;
+            currentView.error("Empty word is not allowed");
         } else {
-            return dictionary.add(Word.from(target, explain));
+            dictionary.add(Word.from(target, explain));
         }
     }
     
-    public boolean deleteWord(String target) {
-        System.out.println("This will remove all words has target(all definitions).");
-        return dictionary.removeTarget(target);
+    @Override
+    public void deleteWord(String target) {
+        boolean deleted = dictionary.remove(target);
+        if (deleted) {
+            currentView.info(String.format("Delete %s successfully.", target));
+        } else {
+            currentView.error("Delete failed.");
+        }
     }
     
     public List<Word> search(String prefix) {
         return dictionary.prefixSearch(prefix);
     }
     
-    public boolean exportToFile(String path) {
+    @Override
+    public void exportToFile(String path) {
         File dest = createFileIfNotExist(path);
         
         List<Word> words = dictionary.allWords();
@@ -120,7 +127,7 @@ public class DictionaryManagement {
                         .append(word.getExplain())
                         .append('\n')));
         
-        return handleWriteToFile(dest, builder.toString()
+        handleWriteToFile(dest, builder.toString()
                 .getBytes(StandardCharsets.UTF_8));
     }
     
@@ -144,9 +151,39 @@ public class DictionaryManagement {
         }
     }
     
+    @Override
     public void updateWord(String target, String explain) {
-        dictionary
-                .search(target)
-                .ifPresent((oldWord) -> dictionary.update(oldWord, explain));
+        Optional<Word> founded = dictionary.get(target);
+        
+        if (founded.isPresent()) {
+            dictionary.update(founded.get(), explain);
+        } else {
+        
+        }
+    }
+    
+    @Override
+    public void searchWord(String target) {
+        if (target == null || target.isEmpty() || target.isBlank()) {
+            currentView.error("Can't not search for empty/blank target.");
+        }
+        
+        List<Word> result = dictionary.prefixSearch(target);
+        currentView.searchResultView(result);
+    }
+    
+    @Override
+    public void lookupWord(String target) {
+        if (target == null || target.isEmpty() || target.isBlank()) {
+            currentView.error("Can't not search for empty/blank target.");
+        }
+        
+        Optional<Word> founded = dictionary.get(target);
+        
+        if (founded.isPresent()) {
+            currentView.lookupResultView(founded.get());
+        } else {
+            currentView.lookupResultView(null);
+        }
     }
 }

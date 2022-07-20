@@ -1,7 +1,11 @@
 package uet.ppvan.commandline;
 
-import uet.ppvan.DictionaryManagement;
+import uet.ppvan.presenter.DictionaryPresenter;
 import uet.ppvan.data.Word;
+import uet.ppvan.utils.Command;
+import uet.ppvan.utils.InputHelper;
+import uet.ppvan.view.CommandlineView;
+import uet.ppvan.view.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +14,8 @@ import java.util.Optional;
 
 public class DictionaryCommandline {
     
-    private final DictionaryManagement manager;
+    private final DictionaryPresenter presenter;
+    private final View view;
     private boolean isRunning = true;
     
     public static void main(String[] args) {
@@ -35,31 +40,31 @@ public class DictionaryCommandline {
                 exit();
                 break;
             case ADD:
-                addNewWord();
+                view.addView();
                 break;
             case DELETE:
-                deleteWord();
+                view.deleteView();
                 break;
             case UPDATE:
-                updateWord();
+                view.updateView();
                 break;
             case INSERT_FROM_COMMANDLINE:
                 insertFromCommandline();
                 break;
             case INSERT_FROM_FILE:
-                insertFromFile();
+                view.insertFromFileView();
                 break;
             case EXPORT_TO_FILE:
-                exportToFile();
+                view.exportToFileView();
                 break;
             case SEARCH:
-                dictionaryLookup();
+                view.lookupView();
                 break;
             case SEARCH_INTERACTIVE:
-                interactiveSearch();
+                view.searchView();
                 break;
             case SHOW_ALL:
-                showAllWords();
+                view.getView();
                 break;
         }
     }
@@ -91,53 +96,9 @@ public class DictionaryCommandline {
             words.add(Word.from(target, explain));
         }
     
-        manager.insertFromCommandline(words);
+        presenter.insertFromCommandline(words);
     }
     
-    private void dictionaryLookup() {
-        String target = InputHelper.getString("Search word: ");
-        Optional<Word> matches = manager.dictionaryLookup(target);
-        
-        if (matches.isPresent()) {
-            Word word = matches.get();
-            System.out.println("Found!");
-            showWords(List.of(word));
-        } else {
-            System.out.println("Not found any. Try again");
-        }
-    }
-    
-    private void exportToFile() {
-        System.out.print("Enter export location(default=dictionaries.txt): ");
-        String path = InputHelper.getStringOrDefault("dictionaries.txt");
-        boolean success = manager.exportToFile(path);
-        
-        if (success) {
-            System.out.printf("Export data to %s successfully.\n", path);
-        } else {
-            System.out.println("Export failed.");
-        }
-    }
-    
-    private void insertFromFile() {
-        System.out.println("Enter path (default = dictionaries.txt): ");
-        String path = InputHelper.getStringOrDefault("dictionaries.txt");
-        
-        manager.insertFromFile(path);
-    }
-    
-    private void addNewWord() {
-        System.out.println("Add new word.");
-        String target = InputHelper.getString("Target: ");
-        String explain = InputHelper.getString("Explain: ");
-        
-        manager.addNewWord(target, explain);
-    }
-    
-    private void interactiveSearch() {
-        String prefix = InputHelper.getString("Enter prefix: ");
-        showWords(manager.search(prefix));
-    }
     
     public void showOptions() {
         System.out.println("Commandline Dictionary Management Program.");
@@ -154,59 +115,8 @@ public class DictionaryCommandline {
         System.out.print("Command[0-9]: ");
     }
     
-    public void clearScreen() {
-        String osName = System.getProperty("os.name");
-        if (osName.contains("Windows")) {
-            try {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.print("\033\143");
-        }
-    }
-    
-    public void deleteWord() {
-        showAllWords();
-        String target = InputHelper.getString("Enter word to delete: ");
-        boolean success = manager.deleteWord(target);
-        
-        if (success) {
-            System.out.printf("Delete: %s successfully\n", target);
-        } else {
-            System.err.printf("Delete: %s failed\n", target);
-        }
-    }
-    
-    public void updateWord() {
-        showAllWords();
-        String target = InputHelper.getString("Enter word to update: ");
-        String newExplain = InputHelper.getString("New explain: ");
-        manager.updateWord(target, newExplain);
-        System.out.println("Update word successfully.");
-    }
-    
     public DictionaryCommandline() {
-        manager = new DictionaryManagement();
-    }
-    
-    
-    private void showAllWords() {
-        showWords(manager.getAllWords());
-    }
-    
-    private void showWords(List<Word> wordList) {
-        
-        if (wordList == null) {
-            return;
-        }
-        
-        String wordFormat = "%d.\t%-10s\t%-10s\n";
-        System.out.printf("%s.\t%-10s\t%-10s\n", "No", "English", "Vietnamese");
-        for (int i = 0; i < wordList.size(); i++) {
-            Word word = wordList.get(i);
-            System.out.printf(wordFormat, i + 1 , wordList.get(i).getTarget(), wordList.get(i).getExplain());
-        }
+        presenter = new DictionaryPresenter();
+        view = new CommandlineView();
     }
 }
