@@ -1,5 +1,6 @@
 package uet.ppvan.commandline;
 
+import uet.ppvan.gui.HelloWorld;
 import uet.ppvan.presenter.DictionaryPresenter;
 import uet.ppvan.data.Word;
 import uet.ppvan.utils.Command;
